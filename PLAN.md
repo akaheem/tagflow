@@ -113,32 +113,24 @@ knowledge.
 - [x] `tagflow/report.py` — console + JSON run reports.
 - [x] `examples/README.md`, `reports/.gitkeep`.
 
-### DONE (build)
-- [x] `tagflow/tags.py` — read + analyze + WRITE tags/terms via SDK
-      (`add_tag`/`add_term` + `entities.update`).
+### DONE (build + verification)
+- [x] `tagflow/tags.py` — read + analyze + WRITE tags/terms via low-level aspect emit
+      (`MetadataChangeProposalWrapper`, idempotent, works uniformly on datasets/charts/dashboards).
 - [x] `tagflow/propagate.py` — core engine: source auto-discovery, downstream
-      propagation, conflict detection.
-- [x] `tagflow/cli.py` — `propagate --dry-run / --apply` entrypoint with
-      `--source`, `--max-hops`, `--out`.
+      propagation, conflict detection, per-entity fault-tolerance.
+- [x] `tagflow/cli.py` — `propagate --dry-run / --apply / --limit N` entrypoint.
+- [x] **Write-back proven end-to-end**: 34 tags written across Snowflake datasets, dbt models,
+      PowerBI / Tableau / Looker charts & dashboards, **0 write failures**, up to 5 hops.
+- [x] **Idempotency verified**: re-run shows 0 new propagations (everything already tagged).
+- [x] Sample report committed to `examples/propagation-report.json`.
 
 ### IN PROGRESS
-- [ ] Smoke-test imports + syntax check (blocked locally by classifier outage;
-      will verify in Codespace).
+- [ ] Pull updated README + commit locally, push to close the loop.
 
-### PENDING (environment — user)
-- [ ] Codespace prebuild finishes.
-- [ ] `datahub docker quickstart` up (watch 8GB memory).
-- [ ] `datahub datapack load showcase-ecommerce`.
-- [ ] Confirm TagFlow can read the loaded graph.
-
-### PENDING (integration & polish)
-- [ ] Run TagFlow dry-run against real showcase-ecommerce data.
-- [ ] Tune sensitivity keywords to what actually exists in the datapack.
-- [ ] Run `--apply`, verify tags appear in DataHub UI (the money shot).
-- [ ] Commit sample output to `examples/`.
-- [ ] Record <3min before/after demo video.
+### PENDING (submission)
+- [ ] Record <3min demo video (before → apply → after in DataHub UI).
 - [ ] Write Devpost description; opt into feedback survey (free $50 tier).
-- [ ] One small OSS PR to DataHub (bonus).
+- [ ] (Optional, ~2 min) Seed a conflicting tag to show conflict detection on camera.
 
 ---
 

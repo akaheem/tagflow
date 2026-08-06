@@ -41,6 +41,29 @@ there. TagFlow makes governance **transitive** across the lineage graph.
 
 ---
 
+## Proven results
+
+Run against a live DataHub loaded with the `showcase-ecommerce` datapack, from a
+**single** `PII_Data` tag on one order-entry source:
+
+| Metric | Result |
+|---|---|
+| Downstream assets scanned | 69 |
+| Classifications propagated in one pass | **34** |
+| Write failures | **0** |
+| Entity types written | Snowflake datasets, dbt models, PowerBI / Tableau / Looker charts & dashboards |
+| Deepest propagation | **5 hops** from source |
+| Re-run (idempotency) | **0** new writes — everything already classified |
+
+Because the propagated tags persist, the classified surface compounds: a second
+run auto-discovers **21** PII-bearing sources (up from 2) and correctly writes
+nothing new. The writer uses low-level aspect emits
+(`MetadataChangeProposalWrapper`), so it labels dashboards and charts as reliably
+as it does tables. A full sample report is in
+[`examples/propagation-report.json`](examples/propagation-report.json).
+
+---
+
 ## Quickstart
 
 > TagFlow talks to a running DataHub instance. The commands below assume the
@@ -60,6 +83,9 @@ python -m tagflow.cli propagate --dry-run
 
 # 4. Apply — write the propagated tags back to DataHub
 python -m tagflow.cli propagate --apply
+
+# Safety: cap the number of writes (also handy for a scoped first test)
+python -m tagflow.cli propagate --apply --limit 1
 ```
 
 ## Project layout
