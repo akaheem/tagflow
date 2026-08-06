@@ -1,0 +1,2 @@
+# TagFlow dependencies
+acryl-datahub[datahub-rest]>=0.13.0
