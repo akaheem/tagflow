@@ -55,6 +55,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="How many hops downstream to propagate (default: 3).",
     )
     prop.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        metavar="N",
+        help="Stop after N propagations. Use for a scoped test write "
+        "(e.g. --apply --limit 1) or as a safety cap.",
+    )
+    prop.add_argument(
         "--out",
         default=None,
         metavar="PATH",
@@ -82,7 +90,7 @@ def _run_propagate(args: argparse.Namespace) -> int:
 
     engine = PropagationEngine(client)
     sources: Optional[List[str]] = args.source
-    report = engine.run(source_urns=sources)
+    report = engine.run(source_urns=sources, limit=args.limit)
 
     print(report.render_console())
 

@@ -29,12 +29,18 @@ class PropagationEngine:
         self.reader = TagReader(client)
         self.writer = TagWriter(client)
 
-    def run(self, source_urns: Optional[Iterable[str]] = None) -> RunReport:
+    def run(
+        self,
+        source_urns: Optional[Iterable[str]] = None,
+        limit: Optional[int] = None,
+    ) -> RunReport:
         """Execute a full propagation pass.
 
         Args:
             source_urns: explicit sources to propagate from. If omitted, sources
                 are auto-discovered from datasets carrying sensitive tags/terms.
+            limit: stop after this many new propagations are recorded. Used for
+                scoped test writes and as a safety cap. ``None`` means no limit.
         """
         report = RunReport(dry_run=self.client.config.dry_run)
 
@@ -44,6 +50,8 @@ class PropagationEngine:
         report.sources_scanned = len(source_urns)
 
         for source_urn in source_urns:
+            if self._limit_reached(report, limit):
+                break
             sensitive = self.reader.filter_sensitive(
                 self.reader.get_classifications(source_urn)
             )
@@ -54,10 +62,14 @@ class PropagationEngine:
             report.downstream_scanned += len(downstream)
 
             for entity in downstream:
+                if self._limit_reached(report, limit):
+                    break
                 existing = self.reader.get_classifications(entity.urn)
                 existing_names = {c.name.lower() for c in existing}
 
                 for classification in sensitive:
+                    if self._limit_reached(report, limit):
+                        break
                     self._resolve_one(
                         report=report,
                         source_urn=source_urn,
@@ -69,6 +81,10 @@ class PropagationEngine:
                     )
 
         return report
+
+    @staticmethod
+    def _limit_reached(report: RunReport, limit: Optional[int]) -> bool:
+        return limit is not None and len(report.propagations) >= limit
 
     def _resolve_one(
         self,
