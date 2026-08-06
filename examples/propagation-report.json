@@ -1,0 +1,320 @@
+{
+  "dry_run": false,
+  "summary": {
+    "sources_scanned": 2,
+    "downstream_scanned": 69,
+    "propagations": 34,
+    "conflicts": 0,
+    "failures": 0
+  },
+  "propagations": [
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_history,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:looker,b2fd91.order-entry-looker.view.order_details,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.ORDER_DETAILS,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.analytics.order_history,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.Customer_Analytics_Measures,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.Essential_KPI_Measures,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.Geographic_Measures,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.Product_Perfromance_Measures,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:powerbi,b2fd91.datahub_order_entries.Time_Inteligence_Measures,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.37fcfb15-34ae-973a-5ae3-cf63691d48e3,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.4a3af1dd-fd0c-7077-d5fd-aa2fdf87cb23,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.8bfe7483-1c9a-a0e1-ec84-57207dd37a15,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.f32082e5-06b8-f46e-9047-4611fffe66b0,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:snowflake,b2fd91.order_entry_db.analytics.order_details_replica,PROD)",
+      "hops": 2,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:looker,b2fd91.order-entry.explore.order_details,PROD)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dashboard:(powerbi,b2fd91.reports.66666666-7777-8888-9999-000000000000)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.b980a8c5-28eb-119e-f6ca-4da32732e5be,PROD)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.c067553a-127e-a871-14a0-5f32cb032c78,PROD)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.f8fb6a0b-7be6-690b-cc45-3c6e0fd2bcde,PROD)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dataset:(urn:li:dataPlatform:tableau,b2fd91.fadbf744-48be-0929-a47c-5786327a3343,PROD)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(powerbi,b2fd91.pages.66666666-7777-8888-9999-000000000000.217abe0d5c1cd421c384)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(powerbi,b2fd91.pages.66666666-7777-8888-9999-000000000000.3f48c0bf859b2d14dcd0)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(powerbi,b2fd91.pages.66666666-7777-8888-9999-000000000000.83a9aaa3207edd6c721e)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(powerbi,b2fd91.pages.66666666-7777-8888-9999-000000000000.85e432543b30346a0507)",
+      "hops": 3,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(tableau,b2fd91.89f38fd7-058d-b66a-6db0-4f85f105468a)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(tableau,b2fd91.b8c660a8-10ea-e32a-b823-fa655e1c2f43)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(tableau,b2fd91.e051d978-989f-a329-5458-e01721b05570)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(tableau,b2fd91.e36d7772-ac4d-4fd0-a893-aec88f3aa13e)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(looker,b2fd91.dashboard_elements.221)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(looker,b2fd91.dashboard_elements.222)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(looker,b2fd91.dashboard_elements.223)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:chart:(looker,b2fd91.dashboard_elements.224)",
+      "hops": 4,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dashboard:(tableau,b2fd91.843bf583-900b-f1ba-0532-b5e67a0373dc)",
+      "hops": 5,
+      "kind": "tag",
+      "applied": true
+    },
+    {
+      "classification": "b2fd91.PII_Data",
+      "classification_urn": "urn:li:tag:b2fd91.PII_Data",
+      "source_urn": "urn:li:dataset:(urn:li:dataPlatform:dbt,b2fd91.ORDER_ENTRY_DB.analytics.order_details,PROD)",
+      "target_urn": "urn:li:dashboard:(looker,b2fd91.dashboards.53)",
+      "hops": 5,
+      "kind": "tag",
+      "applied": true
+    }
+  ],
+  "conflicts": [],
+  "failures": []
+}
