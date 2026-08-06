@@ -16,7 +16,7 @@ from typing import Iterable, List, Optional
 
 from tagflow.client import TagFlowClient
 from tagflow.lineage import LineageWalker
-from tagflow.report import Conflict, Propagation, RunReport
+from tagflow.report import Conflict, Failure, Propagation, RunReport
 from tagflow.tags import Classification, TagReader, TagWriter
 
 
@@ -105,7 +105,23 @@ class PropagationEngine:
         # Clear to propagate.
         applied = False
         if not self.client.config.dry_run:
-            self.writer.apply_classification(target_urn, classification)
+            try:
+                wrote = self.writer.apply_classification(target_urn, classification)
+            except Exception as exc:  # noqa: BLE001 - isolate one entity's failure
+                report.failures.append(
+                    Failure(
+                        target_urn=target_urn,
+                        classification=classification.name,
+                        classification_urn=classification.urn,
+                        source_urn=source_urn,
+                        error=f"{type(exc).__name__}: {exc}",
+                    )
+                )
+                return
+            # Already present at the URN level (idempotent no-op) — nothing
+            # actually changed, so don't record it as a propagation.
+            if not wrote:
+                return
             applied = True
 
         report.propagations.append(

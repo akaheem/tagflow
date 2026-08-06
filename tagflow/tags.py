@@ -7,11 +7,18 @@ decide which ones are sensitive, and write new classifications back.
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from typing import List
 
-from datahub.metadata.schema_classes import GlobalTagsClass, GlossaryTermsClass
-from datahub.sdk import TagUrn, GlossaryTermUrn
+from datahub.emitter.mcp import MetadataChangeProposalWrapper
+from datahub.metadata.schema_classes import (
+    AuditStampClass,
+    GlobalTagsClass,
+    GlossaryTermAssociationClass,
+    GlossaryTermsClass,
+    TagAssociationClass,
+)
 
 from tagflow.client import TagFlowClient
 
@@ -76,29 +83,72 @@ class TagReader:
 
 
 class TagWriter:
-    """Writes tags and glossary terms back to DataHub."""
+    """Writes tags and glossary terms back to DataHub via low-level aspect emit.
+
+    Uses ``MetadataChangeProposalWrapper`` against the raw ``globalTags`` /
+    ``glossaryTerms`` aspects so it writes uniformly to *any* entity type —
+    datasets, charts, dashboards — unlike the high-level SDK helpers, which are
+    dataset-oriented. Writes are idempotent: a classification already present on
+    the target is left untouched.
+    """
+
+    # Attribution actor stamped on term changes, so the provenance of every
+    # classification TagFlow propagates is visible in the DataHub UI.
+    ACTOR_URN = "urn:li:corpuser:tagflow"
 
     def __init__(self, client: TagFlowClient):
         self.client = client
 
     def apply_classification(
         self, target_urn: str, classification: Classification
-    ) -> None:
-        """Write a tag or term to ``target_urn``. Raises on failure."""
-        if self.client.config.dry_run:
-            return
+    ) -> bool:
+        """Write a tag or term to ``target_urn``.
 
-        sdk = self.client.sdk
-        dataset = sdk.entities.get(target_urn)
+        Returns True if a new association was written, False if it was already
+        present (idempotent no-op). Raises on write failure so the caller can
+        record it per-entity.
+        """
+        if self.client.config.dry_run:
+            return False
 
         if classification.kind == "tag":
-            dataset.add_tag(TagUrn(classification.urn))
-        elif classification.kind == "term":
-            dataset.add_term(GlossaryTermUrn(classification.urn))
-        else:
-            raise ValueError(f"Unknown classification kind: {classification.kind}")
+            return self._apply_tag(target_urn, classification.urn)
+        if classification.kind == "term":
+            return self._apply_term(target_urn, classification.urn)
+        raise ValueError(f"Unknown classification kind: {classification.kind}")
 
-        sdk.entities.update(dataset)
+    def _apply_tag(self, target_urn: str, tag_urn: str) -> bool:
+        graph = self.client.graph
+        aspect = graph.get_aspect(target_urn, GlobalTagsClass)
+        if aspect is None:
+            aspect = GlobalTagsClass(tags=[])
+
+        if any(str(assoc.tag) == tag_urn for assoc in aspect.tags):
+            return False  # already present — idempotent no-op
+
+        aspect.tags.append(TagAssociationClass(tag=tag_urn))
+        graph.emit(
+            MetadataChangeProposalWrapper(entityUrn=target_urn, aspect=aspect)
+        )
+        return True
+
+    def _apply_term(self, target_urn: str, term_urn: str) -> bool:
+        graph = self.client.graph
+        aspect = graph.get_aspect(target_urn, GlossaryTermsClass)
+        if aspect is None:
+            aspect = GlossaryTermsClass(terms=[], auditStamp=self._audit_stamp())
+
+        if any(str(assoc.urn) == term_urn for assoc in aspect.terms):
+            return False  # already present — idempotent no-op
+
+        aspect.terms.append(GlossaryTermAssociationClass(urn=term_urn))
+        graph.emit(
+            MetadataChangeProposalWrapper(entityUrn=target_urn, aspect=aspect)
+        )
+        return True
+
+    def _audit_stamp(self) -> AuditStampClass:
+        return AuditStampClass(time=int(time.time() * 1000), actor=self.ACTOR_URN)
 
 
 def _urn_tail(urn: str) -> str:

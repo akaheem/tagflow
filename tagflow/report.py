@@ -37,6 +37,17 @@ class Conflict:
 
 
 @dataclass
+class Failure:
+    """A propagation that was attempted in apply mode but could not be written."""
+
+    target_urn: str
+    classification: str
+    classification_urn: str
+    source_urn: str
+    error: str
+
+
+@dataclass
 class RunReport:
     """Aggregated outcome of a TagFlow propagation run."""
 
@@ -45,6 +56,7 @@ class RunReport:
     downstream_scanned: int = 0
     propagations: List[Propagation] = field(default_factory=list)
     conflicts: List[Conflict] = field(default_factory=list)
+    failures: List[Failure] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -54,9 +66,11 @@ class RunReport:
                 "downstream_scanned": self.downstream_scanned,
                 "propagations": len(self.propagations),
                 "conflicts": len(self.conflicts),
+                "failures": len(self.failures),
             },
             "propagations": [asdict(p) for p in self.propagations],
             "conflicts": [asdict(c) for c in self.conflicts],
+            "failures": [asdict(f) for f in self.failures],
         }
 
     def to_json(self, indent: int = 2) -> str:
@@ -74,6 +88,7 @@ class RunReport:
             f"  Downstream scanned   : {self.downstream_scanned}",
             f"  Classifications flowed: {len(self.propagations)}",
             f"  Conflicts flagged    : {len(self.conflicts)}",
+            f"  Failures             : {len(self.failures)}",
             "-" * 60,
         ]
 
@@ -98,14 +113,51 @@ class RunReport:
                     f"'{c.existing_classification}'"
                 )
 
+        if self.failures:
+            lines.append("-" * 60)
+            lines.append("  FAILURES (write did not succeed):")
+            for f in self.failures:
+                lines.append(
+                    f"    x {_short(f.target_urn)} [{f.classification}]: {f.error}"
+                )
+
         lines.append("=" * 60)
         lines.append("")
         return "\n".join(lines)
 
 
 def _short(urn: str) -> str:
-    """Shorten a URN to its readable tail for console output."""
+    """Shorten a URN to a readable label for console output.
+
+    Handles the URN shapes TagFlow touches:
+      dataset   -> last two dotted name segments (``...analytics.order_details``
+                   -> ``analytics.order_details``)
+      chart     -> ``tool:id``                  (``looker:dashboard_element_1``)
+      dashboard -> ``tool:id``
+    Falls back to the last comma-field for anything else.
+    """
     if not urn:
         return "?"
-    tail = urn.rstrip(")").split(",")
-    return tail[-2] if len(tail) >= 2 else urn
+
+    parts = urn.split(":", 3)
+    entity_type = parts[2] if len(parts) >= 3 else ""
+
+    if "(" in urn:
+        inner = urn[urn.find("(") + 1 : urn.rfind(")")]
+    else:
+        inner = urn
+    fields = inner.split(",")
+
+    if entity_type == "dataset" and len(fields) >= 2:
+        name = fields[1]
+        segs = name.split(".")
+        return ".".join(segs[-2:]) if len(segs) >= 2 else name
+
+    if entity_type in ("chart", "dashboard") and len(fields) >= 2:
+        tool = fields[0].split(":")[-1]          # strip any urn:li:dataPlatform: prefix
+        ident = fields[-1].split(".")[-1]
+        if len(ident) > 24:
+            ident = ident[:21] + "..."
+        return f"{tool}:{ident}"
+
+    return fields[-1] if fields else urn
