@@ -106,6 +106,16 @@ def _run_propagate(args: argparse.Namespace) -> int:
 
     print(report.render_console())
 
+    # Auto-discovery found nothing sensitive — most often the sample data isn't
+    # loaded. Say so plainly instead of looking like a silent no-op.
+    if not sources and report.sources_scanned == 0:
+        print(
+            "No sensitive sources found. Is a sample datapack loaded (e.g. "
+            "showcase-ecommerce) with tags/terms that match the sensitivity "
+            "policy in config.py?",
+            file=sys.stderr,
+        )
+
     if args.out:
         with open(args.out, "w", encoding="utf-8") as fh:
             fh.write(report.to_json())

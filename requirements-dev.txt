@@ -1,0 +1,4 @@
+# Test-only dependencies (in addition to the runtime deps in requirements.txt).
+# Install with:  pip install -r requirements-dev.txt
+-r requirements.txt
+pytest>=7.0

@@ -160,6 +160,10 @@ knowledge.
 - [x] README gained a "Proof of write-back" section (points at the applied report
       + a DataHub UI screenshot slot) and a "Future work" section (MCP wrapper /
       DataHub Skill / Agent Context Kit), backed by a real `ROADMAP.md`.
+- [x] `cli.py` now prints a plain "no sensitive sources found — is a datapack
+      loaded?" hint when auto-discovery finds nothing, instead of a silent no-op.
+- [x] `requirements-dev.txt` (pytest) added + README "Tests" section so a fresh
+      clone can run the suite. Runtime `requirements.txt` kept minimal (not frozen).
 
 ### IN PROGRESS
 - [ ] Pull updated README + commit locally, push to close the loop.

@@ -82,6 +82,9 @@ attributable to the `tagflow` actor, so the report doubles as an audit trail.
 > `showcase-ecommerce` datapack is loaded.
 
 ```bash
+# 0. Load a sample datapack so there's lineage + tags to propagate
+datahub datapack load showcase-ecommerce
+
 # 1. Install
 pip install -r requirements.txt
 
@@ -97,6 +100,16 @@ python -m tagflow.cli propagate --apply
 
 # Safety: cap the number of writes (also handy for a scoped first test)
 python -m tagflow.cli propagate --apply --limit 1
+```
+
+## Tests
+
+The decision logic (propagate / skip / conflict / limit / failure isolation) is
+covered by an in-memory suite that needs no DataHub connection:
+
+```bash
+pip install -r requirements-dev.txt
+pytest
 ```
 
 ## Project layout
