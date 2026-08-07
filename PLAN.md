@@ -165,19 +165,27 @@ knowledge.
 - [ ] Pull updated README + commit locally, push to close the loop.
 
 ### PENDING (submission)
-- [ ] Record <3min demo video. Shot list (no "hi I'm…" intro — open on the problem):
-      - 0:00–0:15 — DataHub UI: a downstream asset (`order_history`) with NO PII tag.
+- [ ] Record demo video — HARD cap <3min, target 2:45. Mandatory + explicitly judged.
+      Off-camera first: `~/dhenv/bin/python scripts/reset_demo.py` → clean "before" state.
+      Shot list (no "hi I'm…" intro — open on the problem):
+      - 0:00–0:15 — DataHub UI: downstream `order_history` with NO PII tag. Point at it:
+        "this table holds PII from upstream but has no classification."
       - 0:15–0:30 — one sentence: the tag lives on the source, not where the data went.
-      - 0:30–2:00 — `clear`, then `propagate --dry-run` → `--apply`; show "Written to
-        DataHub: 34"; refresh the UI on `order_history` → the PII_Data tag is now there.
-      - 2:00–2:30 — `demo_conflict.py`: TagFlow FLAGS a conflict, leaves it untouched.
-      - 2:30–3:00 — recap + repo link.
-      - Clean terminal (`clear` first); use `--limit 5` if a full run is too verbose.
+      - 0:30–2:00 — `clear`, then `propagate --dry-run` → show "Would write: 34" (safety
+        first), then `--apply` → "Written to DataHub: 34". Refresh the UI on
+        `order_history` → the PII_Data tag is now there. PAUSE — let the payoff land.
+      - 2:00–2:35 — `scripts/demo_conflict.py`: TagFlow FLAGS a conflict and REFUSES to
+        overwrite. This is the differentiator (safe, not reckless) — do NOT skip it.
+      - 2:35–3:00 — recap; end on a black card with `github.com/akaheem/tagflow` large.
+      Production: clean terminal (`clear`); `--limit 5` if a full run is too verbose;
+      headset mic in a quiet room (or silent screen capture + voiceover after).
 - [ ] Add real DataHub UI screenshot to `examples/writeback-ui.png` (before/after split)
       — referenced by README; or delete that image line before pushing.
 - [ ] Paste the demo-video URL into the README hero link (currently `#`).
 - [ ] Write Devpost description; opt into feedback survey (free $50 tier).
-- [ ] (Optional, ~2 min) Seed a conflicting tag to show conflict detection on camera.
+- [ ] RECOMMENDED (not optional) — show conflict detection on camera via
+      `scripts/demo_conflict.py`. ~2 min, already built and camera-ready; it's the
+      "safe, not reckless" differentiator judges won't know exists if it's not shown.
 
 ---
 
