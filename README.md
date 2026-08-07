@@ -49,7 +49,7 @@ Run against a live DataHub loaded with the `showcase-ecommerce` datapack, from a
 | Metric | Result |
 |---|---|
 | Downstream assets scanned | 69 |
-| Classifications propagated in one pass | **34** |
+| Classifications **written** to DataHub in one pass | **34** |
 | Write failures | **0** |
 | Entity types written | Snowflake datasets, dbt models, PowerBI / Tableau / Looker charts & dashboards |
 | Deepest propagation | **5 hops** from source |
@@ -61,6 +61,15 @@ nothing new. The writer uses low-level aspect emits
 (`MetadataChangeProposalWrapper`), so it labels dashboards and charts as reliably
 as it does tables. A full sample report is in
 [`examples/propagation-report.json`](examples/propagation-report.json).
+
+### Proof of write-back
+
+This is a real, applied run — the report opens with `"dry_run": false`, and all
+**34** propagated classifications carry `"applied": true` next to the exact URN
+they were written to. Re-running was idempotent: **0** new writes. Every write is
+attributable to the `tagflow` actor, so the report doubles as an audit trail.
+
+![The PII_Data tag TagFlow wrote onto a downstream order_history dataset, shown in the DataHub UI](examples/writeback-ui.png)
 
 ---
 
@@ -101,6 +110,20 @@ tagflow/
   report.py         # human-readable run reports
 examples/           # sample outputs (propagation reports)
 ```
+
+## Future work
+
+TagFlow deliberately uses the DataHub Python SDK for direct, auditable graph
+access — the write path works uniformly on datasets, charts, and dashboards. The
+natural extensions, tracked in [ROADMAP.md](ROADMAP.md):
+
+- **MCP Server wrapper** — expose `propagate` (dry-run / `--apply` / report) as
+  MCP tools so any MCP client can invoke governance propagation from a
+  conversation.
+- **DataHub Skill** — package the propagation runbook as a Skill that agents can
+  discover and call.
+- **Agent Context Kit** — surface lineage and pending-propagation context to
+  agent-driven catalog workflows.
 
 ## License
 

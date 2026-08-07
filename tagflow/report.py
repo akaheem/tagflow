@@ -65,6 +65,7 @@ class RunReport:
                 "sources_scanned": self.sources_scanned,
                 "downstream_scanned": self.downstream_scanned,
                 "propagations": len(self.propagations),
+                "written": sum(1 for p in self.propagations if p.applied),
                 "conflicts": len(self.conflicts),
                 "failures": len(self.failures),
             },
@@ -79,6 +80,7 @@ class RunReport:
     def render_console(self) -> str:
         """Human-readable summary for the terminal / demo video."""
         mode = "DRY RUN (no writes)" if self.dry_run else "APPLIED (written to DataHub)"
+        written = sum(1 for p in self.propagations if p.applied)
         lines = [
             "",
             "=" * 60,
@@ -86,7 +88,11 @@ class RunReport:
             "=" * 60,
             f"  Sources scanned      : {self.sources_scanned}",
             f"  Downstream scanned   : {self.downstream_scanned}",
-            f"  Classifications flowed: {len(self.propagations)}",
+            (
+                f"  Written to DataHub   : {written}"
+                if not self.dry_run
+                else f"  Would write          : {len(self.propagations)}"
+            ),
             f"  Conflicts flagged    : {len(self.conflicts)}",
             f"  Failures             : {len(self.failures)}",
             "-" * 60,

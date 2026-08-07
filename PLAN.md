@@ -151,6 +151,16 @@ knowledge.
       dry-run writes nothing, glossary-term path, discovery fault-tolerance, and
       report JSON/console/`_short()` rendering. Run: `pytest` in the Codespace.
 
+### DONE (submission weak-point hardening)
+- [x] `examples/README.md` corrected — the committed report is an APPLIED run
+      (`dry_run: false`, 34 written), not a dry-run; the old text implied read-only.
+- [x] `report.py` summary now includes `"written": <applied count>`; console shows
+      "Written to DataHub: N" (apply) vs "Would write: N" (dry-run) — write-back is
+      provable at a glance, in the repo and on the demo video.
+- [x] README gained a "Proof of write-back" section (points at the applied report
+      + a DataHub UI screenshot slot) and a "Future work" section (MCP wrapper /
+      DataHub Skill / Agent Context Kit), backed by a real `ROADMAP.md`.
+
 ### IN PROGRESS
 - [ ] Pull updated README + commit locally, push to close the loop.
 

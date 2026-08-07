@@ -21,6 +21,7 @@ def test_to_dict_summary_counts():
         "sources_scanned": 0,
         "downstream_scanned": 0,
         "propagations": 1,
+        "written": 1,
         "conflicts": 1,
         "failures": 1,
     }
@@ -37,9 +38,20 @@ def test_to_json_round_trips():
 def test_render_console_mentions_each_section():
     out = _report_with_one_of_each().render_console()
     assert "APPLIED" in out
+    assert "Written to DataHub" in out
     assert "PROPAGATIONS" in out
     assert "CONFLICTS" in out
     assert "FAILURES" in out
+
+
+def test_render_console_dry_run_says_would_write():
+    report = RunReport(dry_run=True)
+    report.propagations.append(
+        Propagation("PII", "urn:li:tag:PII", "s", "t", 1, "tag", False)
+    )
+    out = report.render_console()
+    assert "Would write" in out
+    assert "Written to DataHub" not in out
 
 
 def test_short_renders_dataset_and_chart():
