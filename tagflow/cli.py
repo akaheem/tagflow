@@ -9,13 +9,23 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import os
+import logging
 import sys
 from typing import List, Optional
 
 from tagflow.client import TagFlowClient
 from tagflow.config import TagFlowConfig
 from tagflow.propagate import PropagationEngine
+
+
+def _quiet_datahub_logging() -> None:
+    """Raise the DataHub SDK log threshold to ERROR.
+
+    Multi-hop lineage (max_hops > 2) makes the SDK emit a verbose warning on
+    every traversal, which floods the console and buries TagFlow's own report.
+    We only lift the threshold — real errors still surface.
+    """
+    logging.getLogger("datahub").setLevel(logging.ERROR)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -72,6 +82,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _run_propagate(args: argparse.Namespace) -> int:
+    _quiet_datahub_logging()
+
     config = TagFlowConfig(
         dry_run=not args.apply,
         max_hops=args.max_hops,

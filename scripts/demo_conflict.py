@@ -17,12 +17,17 @@ Usage (in the Codespace):
 from __future__ import annotations
 
 import json
+import logging
 import os
 import sys
 
 # Ensure the repo root is importable when run as `python scripts/demo_conflict.py`
 # (running a script inside scripts/ otherwise puts only scripts/ on sys.path).
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+# Keep the console clean for the demo video — the SDK warns on every multi-hop
+# lineage traversal; we only lift the threshold so real errors still show.
+logging.getLogger("datahub").setLevel(logging.ERROR)
 
 from datahub.emitter.mcp import MetadataChangeProposalWrapper
 from datahub.metadata.schema_classes import GlobalTagsClass, TagAssociationClass

@@ -28,6 +28,10 @@ class PropagationEngine:
         self.lineage = LineageWalker(client)
         self.reader = TagReader(client)
         self.writer = TagWriter(client)
+        # Per-run memo of get_classifications, kept write-coherent in
+        # _resolve_one. An entity reachable from several sources (or already
+        # seen during source discovery) is then read from DataHub only once.
+        self._class_cache: dict = {}
 
     def run(
         self,
@@ -53,7 +57,7 @@ class PropagationEngine:
             if self._limit_reached(report, limit):
                 break
             sensitive = self.reader.filter_sensitive(
-                self.reader.get_classifications(source_urn)
+                self._classifications(source_urn)
             )
             if not sensitive:
                 continue
@@ -64,8 +68,8 @@ class PropagationEngine:
             for entity in downstream:
                 if self._limit_reached(report, limit):
                     break
-                existing = self.reader.get_classifications(entity.urn)
-                existing_names = {c.name.lower() for c in existing}
+                existing = self._classifications(entity.urn)
+                existing_urns = {c.urn for c in existing}
 
                 for classification in sensitive:
                     if self._limit_reached(report, limit):
@@ -77,10 +81,22 @@ class PropagationEngine:
                         hops=entity.hops,
                         classification=classification,
                         existing=existing,
-                        existing_names=existing_names,
+                        existing_urns=existing_urns,
                     )
 
         return report
+
+    def _classifications(self, urn: str) -> List[Classification]:
+        """Read an entity's classifications once per run, then serve from cache.
+
+        Kept coherent with writes by _resolve_one, so the skip-if-present check
+        stays correct when the same entity is reached again later in the run.
+        """
+        cached = self._class_cache.get(urn)
+        if cached is None:
+            cached = self.reader.get_classifications(urn)
+            self._class_cache[urn] = cached
+        return cached
 
     @staticmethod
     def _limit_reached(report: RunReport, limit: Optional[int]) -> bool:
@@ -94,11 +110,13 @@ class PropagationEngine:
         hops: int,
         classification: Classification,
         existing: List[Classification],
-        existing_names: set,
+        existing_urns: set,
     ) -> None:
         """Decide what to do with one (target, classification) pair."""
-        # Already present downstream — nothing to do.
-        if classification.name.lower() in existing_names:
+        # Already present downstream — nothing to do. Matched by URN, the true
+        # identity of a tag/term, so this aligns with the writer's own
+        # URN-level idempotency (a same-named but distinct label won't mask it).
+        if classification.urn in existing_urns:
             return
 
         # Conflict detection: the target already carries a *different* sensitive
@@ -139,6 +157,10 @@ class PropagationEngine:
             if not wrote:
                 return
             applied = True
+            # Keep the per-run cache coherent: this label now lives on the
+            # target, so a later hop reaching it again correctly skips it.
+            existing.append(classification)
+            existing_urns.add(classification.urn)
 
         report.propagations.append(
             Propagation(
@@ -178,9 +200,12 @@ class PropagationEngine:
         sources: List[str] = []
 
         for urn in graph.get_urns_by_filter(entity_types=["dataset"]):
-            sensitive = self.reader.filter_sensitive(
-                self.reader.get_classifications(urn)
-            )
+            try:
+                sensitive = self.reader.filter_sensitive(
+                    self._classifications(urn)
+                )
+            except Exception:  # noqa: BLE001 - skip an unreadable entity, keep scanning
+                continue
             if sensitive:
                 sources.append(urn)
 

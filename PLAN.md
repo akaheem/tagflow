@@ -124,6 +124,20 @@ knowledge.
 - [x] **Idempotency verified**: re-run shows 0 new propagations (everything already tagged).
 - [x] Sample report committed to `examples/propagation-report.json`.
 
+### DONE (overnight hardening review — behavior-preserving)
+- [x] Suppress the DataHub SDK's per-traversal multi-hop lineage warning
+      (`logging.getLogger("datahub").setLevel(ERROR)`) in `cli.py` and both demo
+      scripts — clean console for the video, real errors still surface.
+- [x] URN-based "already present" check in `propagate._resolve_one` (was
+      name-based) — aligns with the writer's URN-level idempotency; a same-named
+      but distinct label no longer masks a real propagation. Proven counts
+      (34 / 0 conflicts on apply, idempotent re-run, 1 seeded conflict) unchanged.
+- [x] Per-run read cache in the engine (`_classifications`), kept write-coherent —
+      each entity's tags/terms are read from DataHub once per run instead of
+      repeatedly across source-discovery + downstream passes.
+- [x] Per-entity fault-tolerance in `_discover_sources` — one unreadable dataset
+      no longer aborts discovery.
+
 ### IN PROGRESS
 - [ ] Pull updated README + commit locally, push to close the loop.
 
