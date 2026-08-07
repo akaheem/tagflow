@@ -138,6 +138,19 @@ knowledge.
 - [x] Per-entity fault-tolerance in `_discover_sources` — one unreadable dataset
       no longer aborts discovery.
 
+### DONE (test suite + regression fix)
+- [x] Caught + fixed a self-introduced regression in `_resolve_one`: the
+      write-coherent cache let `_find_conflict` see freshly-written sibling labels,
+      so two sensitive tags of the same kind from one source (e.g. PII + GDPR)
+      would falsely flag each other. Fix: freeze `conflict_basis = tuple(existing)`
+      per target before writes; detect conflicts against that snapshot.
+- [x] `tests/` — pytest suite over the real engine/reader/writer/lineage with an
+      in-memory DataHub fake (`tests/fakes.py`). Covers: propagate, idempotent
+      re-run, sibling-labels-no-false-conflict (the regression guard), genuine
+      conflict flagged-not-written, `--limit` cap, write-failure isolation,
+      dry-run writes nothing, glossary-term path, discovery fault-tolerance, and
+      report JSON/console/`_short()` rendering. Run: `pytest` in the Codespace.
+
 ### IN PROGRESS
 - [ ] Pull updated README + commit locally, push to close the loop.
 
