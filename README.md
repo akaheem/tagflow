@@ -1,6 +1,6 @@
 # TagFlow
 
-**Governance that follows your data.** TagFlow is an AI-driven agent that reads
+**Governance that follows your data.** TagFlow is a governance agent that reads
 lineage from [DataHub](https://datahub.com), finds sensitive and glossary
 classifications on upstream columns, and **propagates them downstream** to
 untagged columns — then writes the results back to the catalog so the next
@@ -43,6 +43,25 @@ there. TagFlow makes governance **transitive** across the lineage graph.
 
 ---
 
+## What makes this different
+
+DataHub *can* propagate tags along lineage — it's a per-tag setting, and
+column-level propagation ships in Core. TagFlow isn't a reimplementation of that;
+it's the **governance safety layer and agent** on top of it:
+
+- **Conflict detection with safe refusal.** When a downstream asset already
+  carries a *different* sensitive label, TagFlow flags it and refuses to
+  overwrite — built-in propagation just stacks labels. Contradictory
+  classifications are precisely what a human should review, not silently merge.
+- **An agent, not a background toggle.** TagFlow runs as a standalone agent
+  against the SDK on open-source DataHub Core (glossary-term propagation is
+  open-beta / Cloud-gated), with an explicit, safe **dry-run → apply** workflow.
+- **Auditable by construction.** Every write carries provenance (the `tagflow`
+  actor) and lands in a JSON run report — a reviewable batch you can diff, not an
+  always-on process you can't inspect.
+- **Idempotent and entity-uniform.** Low-level aspect emits label datasets,
+  charts, and dashboards the same way; a re-run writes nothing new.
+
 ## Proven results
 
 Run against a live DataHub loaded with the `showcase-ecommerce` datapack, from a
@@ -57,6 +76,11 @@ Run against a live DataHub loaded with the `showcase-ecommerce` datapack, from a
 | Deepest propagation | **5 hops** from source |
 | Re-run (idempotency) | **0** new writes — everything already classified |
 
+> These numbers are deterministic **for the `showcase-ecommerce` datapack** —
+> they reflect that graph's lineage shape, not random sampling. A different
+> catalog will produce different counts; the behavior (propagate, skip, flag,
+> refuse) is the same.
+
 Because the propagated tags persist, the classified surface compounds: a second
 run auto-discovers **21** PII-bearing sources (up from 2) and correctly writes
 nothing new. The writer uses low-level aspect emits
@@ -68,12 +92,38 @@ as it does tables. A full sample report is in
 
 This is a real, applied run — the report opens with `"dry_run": false`, and all
 **34** propagated classifications carry `"applied": true` next to the exact URN
-they were written to. Re-running was idempotent: **0** new writes. Every write is
-attributable to the `tagflow` actor, so the report doubles as an audit trail.
+they were written to. Re-running was idempotent: **0** new writes. Glossary-term
+writes are stamped with the `tagflow` actor, and every write — tag or term — is
+emitted under TagFlow's identity, so DataHub's own audit log attributes each
+change and the JSON report doubles as a provenance trail.
 
 ![Before and after: a downstream order_history dataset in the DataHub UI — untagged on the left, carrying the PII_Data tag TagFlow wrote on the right](examples/writeback-ui.png)
 
 ---
+
+## Safety features
+
+Writing governance metadata back automatically is powerful, so TagFlow is
+conservative by design:
+
+- **Dry-run by default.** `--apply` is required to write anything; the default
+  run computes and reports changes without touching DataHub.
+- **Conflict refusal.** If a downstream asset already carries a *different*
+  sensitive label, TagFlow flags it for human review and does **not** overwrite.
+- **Idempotent.** Every write checks for the existing association first, so
+  re-runs (and concurrent runs) write nothing new — no duplicates, no clobbering.
+- **Partial success, never a hard abort.** If one entity can't be written, that
+  failure is recorded (`33 succeeded, 1 failed`) and the run continues.
+- **Scoping controls.** `--source` and `--limit N` bound exactly what a run
+  touches, so a first apply can be as small as one write.
+
+## Why now
+
+As organizations lean on AI agents and automated pipelines, governance metadata
+has to stay correct across data that is constantly copied, joined, and reshaped.
+Manual tagging doesn't keep up — so lineage-aware propagation, applied safely and
+auditable after the fact, becomes the practical way to keep classifications where
+the data actually is.
 
 ## Quickstart
 

@@ -7,7 +7,7 @@
 
 ## 1. What we're building
 
-**TagFlow** — an AI-driven governance agent that makes classifications
+**TagFlow** — a governance agent that makes classifications
 *transitive* across a data stack.
 
 **The problem:** Data teams tag sensitive fields at the source (e.g. `PII` on
@@ -164,6 +164,12 @@ knowledge.
       loaded?" hint when auto-discovery finds nothing, instead of a silent no-op.
 - [x] `requirements-dev.txt` (pytest) added + README "Tests" section so a fresh
       clone can run the suite. Runtime `requirements.txt` kept minimal (not frozen).
+- [x] README "What makes this different" section. Verified via research that
+      DataHub DOES ship lineage-aware tag propagation (per-tag) + column-level
+      propagation in Core, so we position TagFlow HONESTLY as the safety layer on
+      top (conflict detection + safe refusal, agent on OSS Core, auditable
+      dry-run→apply, idempotent) rather than claiming DataHub can't propagate.
+      Use the SAME framing in the Devpost writeup.
 
 ### IN PROGRESS
 - [ ] Pull updated README + commit locally, push to close the loop.
@@ -187,6 +193,12 @@ knowledge.
       — referenced by README; or delete that image line before pushing.
 - [ ] Paste the demo-video URL into the README hero link (currently `#`).
 - [ ] Write Devpost description; opt into feedback survey (free $50 tier).
+      - Use the README's "What makes this different" framing verbatim (honest re:
+        DataHub's existing lineage propagation — do NOT claim it lacks it).
+      - OSS bonus: DECIDED to skip a deadline-timed docs PR (small bonus, a rushed
+        typo PR can read as cynical to DataHub judges). Instead state plainly:
+        "TagFlow is released as Apache-2.0 open source and is built on DataHub's
+        open-source SDK." No fabricated contribution.
 - [ ] RECOMMENDED (not optional) — show conflict detection on camera via
       `scripts/demo_conflict.py`. ~2 min, already built and camera-ready; it's the
       "safe, not reckless" differentiator judges won't know exists if it's not shown.
