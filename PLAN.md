@@ -165,7 +165,17 @@ knowledge.
 - [ ] Pull updated README + commit locally, push to close the loop.
 
 ### PENDING (submission)
-- [ ] Record <3min demo video (before → apply → after in DataHub UI).
+- [ ] Record <3min demo video. Shot list (no "hi I'm…" intro — open on the problem):
+      - 0:00–0:15 — DataHub UI: a downstream asset (`order_history`) with NO PII tag.
+      - 0:15–0:30 — one sentence: the tag lives on the source, not where the data went.
+      - 0:30–2:00 — `clear`, then `propagate --dry-run` → `--apply`; show "Written to
+        DataHub: 34"; refresh the UI on `order_history` → the PII_Data tag is now there.
+      - 2:00–2:30 — `demo_conflict.py`: TagFlow FLAGS a conflict, leaves it untouched.
+      - 2:30–3:00 — recap + repo link.
+      - Clean terminal (`clear` first); use `--limit 5` if a full run is too verbose.
+- [ ] Add real DataHub UI screenshot to `examples/writeback-ui.png` (before/after split)
+      — referenced by README; or delete that image line before pushing.
+- [ ] Paste the demo-video URL into the README hero link (currently `#`).
 - [ ] Write Devpost description; opt into feedback survey (free $50 tier).
 - [ ] (Optional, ~2 min) Seed a conflicting tag to show conflict detection on camera.
 

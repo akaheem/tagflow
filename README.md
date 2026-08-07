@@ -11,6 +11,8 @@ person or agent inherits the knowledge.
 > unlabeled. TagFlow closes that gap by walking DataHub lineage and flowing tags
 > to where the data actually went.
 
+**[Watch the 3-minute demo](#)** &nbsp;·&nbsp; before → `--apply` → after in the DataHub UI. *(link added on submission)*
+
 ---
 
 ## Why it matters
@@ -69,7 +71,7 @@ This is a real, applied run — the report opens with `"dry_run": false`, and al
 they were written to. Re-running was idempotent: **0** new writes. Every write is
 attributable to the `tagflow` actor, so the report doubles as an audit trail.
 
-![The PII_Data tag TagFlow wrote onto a downstream order_history dataset, shown in the DataHub UI](examples/writeback-ui.png)
+![Before and after: a downstream order_history dataset in the DataHub UI — untagged on the left, carrying the PII_Data tag TagFlow wrote on the right](examples/writeback-ui.png)
 
 ---
 
