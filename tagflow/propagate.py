@@ -70,6 +70,13 @@ class PropagationEngine:
                     break
                 existing = self._classifications(entity.urn)
                 existing_urns = {c.urn for c in existing}
+                # Frozen snapshot of the target's *pre-existing* classifications
+                # for this pass. Successful writes append to `existing` (the
+                # cache) so later hops skip correctly, but conflict detection must
+                # compare against this frozen copy — otherwise two sibling labels
+                # from the same source (e.g. tags PII and GDPR) would flag each
+                # other as conflicts once the first is written.
+                conflict_basis = tuple(existing)
 
                 for classification in sensitive:
                     if self._limit_reached(report, limit):
@@ -82,6 +89,7 @@ class PropagationEngine:
                         classification=classification,
                         existing=existing,
                         existing_urns=existing_urns,
+                        conflict_basis=conflict_basis,
                     )
 
         return report
@@ -111,6 +119,7 @@ class PropagationEngine:
         classification: Classification,
         existing: List[Classification],
         existing_urns: set,
+        conflict_basis: tuple,
     ) -> None:
         """Decide what to do with one (target, classification) pair."""
         # Already present downstream — nothing to do. Matched by URN, the true
@@ -122,7 +131,7 @@ class PropagationEngine:
         # Conflict detection: the target already carries a *different* sensitive
         # classification. We flag rather than stack a second one silently, since
         # contradictory sensitivity labels need human review.
-        conflicting = self._find_conflict(classification, existing)
+        conflicting = self._find_conflict(classification, conflict_basis)
         if conflicting is not None:
             report.conflicts.append(
                 Conflict(
